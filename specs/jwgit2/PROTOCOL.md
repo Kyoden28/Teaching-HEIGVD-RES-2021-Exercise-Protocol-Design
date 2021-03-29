@@ -17,7 +17,7 @@ The client, by asking authorization to the server to connect.
 | Client                 | Server                                     |
 | ---------------------- | ------------------------------------------ |
 | Asks for connection -> |                                            |
-|                        | <- Grants of refuses connection            |
+|                        | <- Grants or refuses connection            |
 | Sends operation ->     |                                            |
 |                        | <- Sends back either an answer or an error |
 | Stop application ->    |                                            |
