@@ -1,3 +1,5 @@
+Author : Johann Werkle
+
 ## What transport protocol do we use?
 
 TCP, we don't need a really fast protocol but we obviously need a reliable way to transmit datas and establish a connection.
