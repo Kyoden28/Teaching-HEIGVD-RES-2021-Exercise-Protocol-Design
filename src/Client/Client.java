@@ -18,7 +18,7 @@ import java.net.UnknownHostException;
 
 public class Client {
 
-    private static int PORT = 4000;
+    private static final int PORT = 4000;
     Socket clientSocket = null;
     BufferedReader in = null;
     PrintWriter out = null;
