@@ -1,4 +1,6 @@
 package Client;
+import Protocol.Protocol;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -71,7 +73,7 @@ public class Client {
 
         new Thread(new Listener()).start();
 
-        out.println("CONNECT");
+        out.println(Protocol.CMD_CONNECT);
         out.flush();
 
         calculate();

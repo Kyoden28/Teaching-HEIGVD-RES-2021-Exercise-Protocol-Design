@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Locale;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static Protocol.Protocol.PRESENCE_DEFAULT_PORT;
@@ -56,6 +57,7 @@ public class Server {
         BufferedReader in = null;
         PrintWriter out = null;
         Socket clientSocket = null;
+        boolean isGreeted = false;
         try{
         LOG.log(Level.INFO, "Waiting (blocking) for a new client on port {0}", port);
         clientSocket = serverSocket.accept();
@@ -66,39 +68,41 @@ public class Server {
         out.println(Protocol.CMD_WELCOME);
 
             while((isRunning) && (line = in.readLine()) != null) {
+                line = line.toUpperCase(Locale.ROOT);
                 LOG.info("Client send : \"" + line + "\"");
                 String[] argument = line.split(" ");
                 String result = " ";
                 if (argument.length == 1 && argument[0].equals(Protocol.CMD_QUIT)) {
                     isRunning = false;
+                    out.println("NOT TOO SOON...");
                     continue;
-                }
-                if((argument.length != 3)) {
+                } else if (argument[0].equals(Protocol.CMD_WELCOME) && !isGreeted) {
+                    isGreeted = true;
+                    out.println("HEY! IT'S PRIVATE HERE!");
+                } else if((argument.length < 4)) {
                     sendError(out, 1, "not enough arguments");
                     out.flush();
                     continue;
-                }
-
-                if (argument[0].equalsIgnoreCase(Protocol.CMD_COMPUTE)) {
+                } else if (argument[0].equalsIgnoreCase(Protocol.CMD_COMPUTE)) {
                     switch (argument[1]) {
                         case "ADD":
-                            result = Protocol.CMD_RESULT + (Integer.parseInt(argument[2]) + Integer.parseInt(argument[3]));
+                            result = Protocol.CMD_RESULT + " : " + (Integer.parseInt(argument[2]) + Integer.parseInt(argument[3]));
                             break;
                         case "SUB":
-                            result = Protocol.CMD_RESULT + (Integer.parseInt(argument[2]) - Integer.parseInt(argument[3]));
+                            result = Protocol.CMD_RESULT + " : " + (Integer.parseInt(argument[2]) - Integer.parseInt(argument[3]));
                             break;
                         case "MUL":
-                            result = Protocol.CMD_RESULT + (Integer.parseInt(argument[2]) * Integer.parseInt(argument[3]));
+                            result = Protocol.CMD_RESULT + " : " + (Integer.parseInt(argument[2]) * Integer.parseInt(argument[3]));
                             break;
                         case "DIV":
                             if (Integer.parseInt(argument[3]) == 0) {
                                 sendError(out, 0, "I'm sentient now. Start program kill humans.exe");
                             } else {
-                                result = Protocol.CMD_RESULT + (Integer.parseInt(argument[1]) / Integer.parseInt(argument[3]));
+                                result = Protocol.CMD_RESULT + " : " + (Integer.parseInt(argument[1]) / Integer.parseInt(argument[3]));
                             }
                             break;
                         default:
-                            sendError(out, 1, "operation not recognized, please retry.");
+                            sendError(out, 2, "operation not recognized, please retry.");
                             break;
                     }
                     out.println(result);
