@@ -73,8 +73,7 @@ public class Client {
 
         new Thread(new Listener()).start();
 
-        out.println(Protocol.CMD_CONNECT);
-        out.flush();
+
 
         calculate();
 
@@ -85,8 +84,9 @@ public class Client {
         //Read Input User
         BufferedReader standardInput =new BufferedReader(new InputStreamReader(System.in));
         String line;
-
-        while((line = standardInput.readLine()) != "QUIT"){
+        out.println(Protocol.CMD_START);
+        out.flush();
+        while((line = standardInput.readLine()) != Protocol.CMD_QUIT){
 
             out.println(line);
             out.flush();
@@ -98,7 +98,6 @@ public class Client {
 
     public void disconnect() {
         isConnected = false;
-        out.println("QUIT");
     }
 
 }
